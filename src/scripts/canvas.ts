@@ -4,13 +4,16 @@ let bgCanvas: HTMLCanvasElement;
 let bgCtx: CanvasRenderingContext2D;
 let frCanvas: HTMLCanvasElement;
 let frCtx: CanvasRenderingContext2D;
+let vidCanvas: HTMLCanvasElement;
+let vidCtx: CanvasRenderingContext2D;
 let image = new Image();
 let frameX = 0;
 let frameY = 12;
 let frameW = 58;
 let frameH = 35;
 let gap = 20;
-let frameCount = 1;
+let frameCount = 11;
+let currentFrame = 1;
 let frameDelay = 800;
 let playAnim = false;
 
@@ -21,6 +24,8 @@ export const initCanvas = () => {
   bgCtx = bgCanvas.getContext('2d') as CanvasRenderingContext2D;
   frCanvas = document.getElementById('fr-canvas') as HTMLCanvasElement;
   frCtx = frCanvas.getContext('2d') as CanvasRenderingContext2D;
+  vidCanvas = document.getElementById('vid-canvas') as HTMLCanvasElement;
+  vidCtx = vidCanvas.getContext('2d') as CanvasRenderingContext2D;
   bgCtx.fillStyle = '#40444a';
   frCtx.fillStyle = '#b5b4b0';
   changeImage();
@@ -41,6 +46,16 @@ const drawFrame = () => {
   bgCtx.fillRect(0, 0, bgCanvas.width, bgCanvas.height);
   drawSprites();
   drawBoxes();
+
+  if (playAnim) {
+    currentFrame += 1;
+    frameX += frameW + gap;
+  }
+  if (currentFrame > frameCount) {
+    currentFrame = 1;
+    frameX = 0;
+    frameY = 12;
+  }
   setTimeout(() => window.requestAnimationFrame(drawFrame), frameDelay);
 };
 
@@ -53,14 +68,5 @@ const drawSprites = () => {
 const drawBoxes = () => {
   frCanvas.width = image.width;
   frCanvas.height = image.height;
-
-  if (!playAnim) {
-    frCtx.strokeRect(frameX, frameY, frameW, frameH);
-    return;
-  }
-
-  for (let i = 0; i < frameCount; i++) {
-    frCtx.strokeRect(frameX, frameY, frameW, frameH);
-    frameX += frameW + gap;
-  }
+  frCtx.strokeRect(frameX, frameY, frameW, frameH);
 };

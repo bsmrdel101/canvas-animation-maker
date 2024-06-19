@@ -22,6 +22,7 @@ export default function Index() {
       <canvas id="bg-canvas"></canvas>
       <canvas id="px-canvas"></canvas>
       <canvas id="fr-canvas"></canvas>
+      <canvas id="vid-canvas"></canvas>
     </div>
   );
 }
