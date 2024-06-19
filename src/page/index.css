@@ -14,13 +14,19 @@
 
 body {
   margin: 1.5rem 1.5rem;
+  overflow: hidden;
+}
+
+.top-bar {
+  display: flex;
+  place-items: center;
+  gap: 0.5rem;
 }
 
 label {
   display: flex;
   flex-direction: column;
   font-weight: bold;
-  margin-bottom: 0.3rem;
 }
 
 canvas {

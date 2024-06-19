@@ -15,7 +15,9 @@ let gap = 20;
 let frameCount = 11;
 let currentFrame = 1;
 let frameDelay = 800;
-let playAnim = false;
+let previewDelay = 60;
+let playFrames = false;
+let playPreview = false;
 
 export const initCanvas = () => {
   pxCanvas = document.getElementById('px-canvas') as HTMLCanvasElement;
@@ -32,22 +34,32 @@ export const initCanvas = () => {
   window.requestAnimationFrame(drawFrame);
 };
 
-export const toggleAnimPlaying = () => {
-  playAnim = !playAnim;
+export const toggleFramesPlaying = () => {
+  playFrames = !playFrames;
+};
+
+export const togglePreviewPlaying = () => {
+  playPreview = !playPreview;
 };
 
 export const changeImage = () => {
-//   const input = document.querySelector('[type="file"]') as HTMLInputElement;
-//   image = input.files[0];
+//   image = e.target.files[0];
   image.src = '/images/idle.png';
 };
 
 const drawFrame = () => {
   bgCtx.fillRect(0, 0, bgCanvas.width, bgCanvas.height);
-  drawSprites();
-  drawBoxes();
+  if (playPreview) {
+    pxCtx.clearRect(0, 0, pxCanvas.width, pxCanvas.height);
+    frCtx.clearRect(0, 0, frCanvas.width, frCanvas.height);
+    drawPreview();
+  } else {
+    vidCtx.clearRect(0, 0, frCanvas.width, frCanvas.height);
+    drawSprites();
+    drawBoxes();
+  }
 
-  if (playAnim) {
+  if (playFrames || playPreview) {
     currentFrame += 1;
     frameX += frameW + gap;
   }
@@ -56,7 +68,7 @@ const drawFrame = () => {
     frameX = 0;
     frameY = 12;
   }
-  setTimeout(() => window.requestAnimationFrame(drawFrame), frameDelay);
+  setTimeout(() => window.requestAnimationFrame(drawFrame), playPreview ? previewDelay : frameDelay);
 };
 
 const drawSprites = () => {
@@ -69,4 +81,10 @@ const drawBoxes = () => {
   frCanvas.width = image.width;
   frCanvas.height = image.height;
   frCtx.strokeRect(frameX, frameY, frameW, frameH);
+};
+
+const drawPreview = () => {
+  vidCanvas.width = frameW;
+  vidCanvas.height = frameH;
+  vidCtx.drawImage(image, frameX, frameY, frameW, frameH, 0, 0, frameW, frameH);
 };
