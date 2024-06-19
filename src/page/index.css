@@ -14,11 +14,13 @@
 
 body {
   margin: 0;
+}
+
+label {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  overflow-y: hidden;
+  flex-direction: column;
+  font-weight: bold;
+  margin: 1rem;
 }
 
 canvas {
