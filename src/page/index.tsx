@@ -5,6 +5,8 @@ import './index.css';
 
 export default function Index() {
   const initAnim = {
+    image: null,
+    url: '',
     frameX: 0,
     frameY: 12,
     frameW: 58,
@@ -16,7 +18,6 @@ export default function Index() {
     previewDelay: 60,
   };
   const [animData, setAnimData] = useState(initAnim);
-  const [image, setImage] = useState(null);
   const [exported, setExported] = useState(false);
 
   useEffect(() => {
@@ -32,7 +33,7 @@ export default function Index() {
       setExported(true);
       output.innerHTML = `<pre>
         class Anim {
-          image = ${image};
+          image = ${animData.image};
           startFrameX = ${animData.frameX};
           startFrameY = ${animData.frameY};
           frameX = ${animData.frameX};
@@ -44,6 +45,7 @@ export default function Index() {
           private currentFrame = ${animData.currentFrame};
           frameDelay = ${animData.previewDelay};
           paused = false;
+          pixel = true;
 
 
           playAnim() {
@@ -61,7 +63,11 @@ export default function Index() {
           }
 
           private drawFrame() {
-          
+            if (this.pixel) {
+              pxCtx.drawImage(this.image, this.frameX, this.frameY, this.frameW, this.frameH, 0, 0, this.frameW, this.frameH);
+            } else {
+              smCtx.drawImage(this.image, this.frameX, this.frameY, this.frameW, this.frameH, 0, 0, this.frameW, this.frameH);
+            }
           }
         }</pre>`;
     }
@@ -75,8 +81,7 @@ export default function Index() {
           Sprite Sheet
           <input
             type="file"
-            value={image}
-            onChange={(e) => setImage(e.target.files[0])}
+            onChange={(e) => setAnimData({ ...animData, image: e.target.files[0], url: `/images/animations/UNNAMED_ANIM/${e.target.files[0].name}` })}
           />
         </label>
         <button onClick={playCanvas}>Start</button>
@@ -86,6 +91,10 @@ export default function Index() {
       </div>
 
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.8rem', marginTop: '1rem' }}>
+        <label>
+          Url/Filepath
+          <input style={{ width: '10rem' }} value={animData.url} onChange={(e) => setAnimData({ ...animData, url: e.target.value })} />
+        </label>
         <label>
           Frame X
           <input style={{ width: '5rem' }} type="number" value={animData.frameX} onChange={(e) => setAnimData({ ...animData, frameX: Number(e.target.value) })} />

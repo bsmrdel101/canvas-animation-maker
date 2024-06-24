@@ -21,6 +21,16 @@ let playPreview = false;
 let data = null;
 
 const setAnimData = (animData) => {
+  if (animData.image instanceof File) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      image.src = reader.result as string;
+    };
+    reader.readAsDataURL(animData.image);
+  } else {
+    image.src = animData.image;
+  }
+
   frameX = animData.frameX;
   frameY = animData.frameY;
   frameW = animData.frameW;
@@ -46,7 +56,6 @@ export const initCanvas = (animData) => {
   bgCtx.fillStyle = '#40444a';
   frCtx.fillStyle = '#b5b4b0';
   setAnimData(animData);
-  changeImage();
 };
 
 export const playCanvas = () => {
@@ -59,11 +68,6 @@ export const toggleFramesPlaying = () => {
 
 export const togglePreviewPlaying = () => {
   playPreview = !playPreview;
-};
-
-export const changeImage = () => {
-//   image = e.target.files[0];
-  image.src = '/images/idle.png';
 };
 
 const drawFrame = () => {
