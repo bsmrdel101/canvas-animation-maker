@@ -18,8 +18,23 @@ let frameDelay = 800;
 let previewDelay = 60;
 let playFrames = false;
 let playPreview = false;
+let data = null;
 
-export const initCanvas = () => {
+const setAnimData = (animData) => {
+  frameX = animData.frameX;
+  frameY = animData.frameY;
+  frameW = animData.frameW;
+  frameH = animData.frameH;
+  gap = animData.gap;
+  frameCount = animData.frameCount;
+  currentFrame = animData.currentFrame;
+  frameDelay = animData.frameDelay;
+  previewDelay = animData.previewDelay;
+  data = animData;
+};
+
+
+export const initCanvas = (animData) => {
   pxCanvas = document.getElementById('px-canvas') as HTMLCanvasElement;
   pxCtx = pxCanvas.getContext('2d') as CanvasRenderingContext2D;
   bgCanvas = document.getElementById('bg-canvas') as HTMLCanvasElement;
@@ -30,7 +45,11 @@ export const initCanvas = () => {
   vidCtx = vidCanvas.getContext('2d') as CanvasRenderingContext2D;
   bgCtx.fillStyle = '#40444a';
   frCtx.fillStyle = '#b5b4b0';
+  setAnimData(animData);
   changeImage();
+};
+
+export const playCanvas = () => {
   window.requestAnimationFrame(drawFrame);
 };
 
@@ -65,8 +84,8 @@ const drawFrame = () => {
   }
   if (currentFrame > frameCount) {
     currentFrame = 1;
-    frameX = 0;
-    frameY = 12;
+    frameX = data.frameX;
+    frameY = data.frameY;
   }
   setTimeout(() => window.requestAnimationFrame(drawFrame), playPreview ? previewDelay : frameDelay);
 };
